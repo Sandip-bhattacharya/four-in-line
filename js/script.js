@@ -24,7 +24,7 @@ isFirstPlayer = true;
 createBoard(); 
 let squares =document.querySelectorAll(".board div"); 
 Array.from(squares).forEach(square=>{ 
-square.addEventListener("click",clickBox, {once:true})
+square.addEventListener("click",clickBox)
 });
 }
 
@@ -45,6 +45,16 @@ function clickBox(e){
  const currentElement = e.target;
  const currentOffset = currentElement.getAttribute('data-offset')
  const currentClass = (isFirstPlayer) ? FIRST_PLAYER_CLASS : SECOND_PLAYER_CLASS;
+  if(!isValidEntry(currentOffset)){
+   alert("Please fill from bottom")
+   return
+  }
+  if(currentElement.classList.contains(FIRST_PLAYER_CLASS) ||
+  currentElement.classList.contains(FIRST_PLAYER_CLASS)){
+    return
+  }
+
+
  isFirstPlayer =  !(isFirstPlayer);
  currentElement.classList.add(currentClass);
    //check if won
@@ -77,6 +87,7 @@ function checkWon(player, currentOffset){
   return false;
 }
 
+//validate if middle point is valid
 function validateMiddlePoint(stepsCombinations){
 let horizontal = 0
 let vertical = 0
@@ -105,7 +116,6 @@ stepsCombinations.forEach((item) => {
   }
 return false
 }
-
 
 //validate function 
 function validate(player, offsetX, offsetY,side){
@@ -152,4 +162,21 @@ function resetSteps(){
   stepsCombinations.map((item)=> {
     item.countSteps = 0 
   })
+}
+
+//validate fillup entry
+function isValidEntry(currentOffset){
+  const offssetArray = currentOffset.split(',');
+  const offSetX = Number(offssetArray[0]);
+  const offSetY = Number(offssetArray[1]);
+  if(offSetY == 10){
+    return true
+  }
+  for(let i = TOTAL_Y; i > offSetY; i--){
+    if(!document.querySelector("[data-offset='"+offSetX+","+i+"']").classList.contains(FIRST_PLAYER_CLASS) &&
+    !document.querySelector("[data-offset='"+offSetX+","+i+"']").classList.contains(SECOND_PLAYER_CLASS)){
+      return false;
+   }
+  }
+  return true  
 }
