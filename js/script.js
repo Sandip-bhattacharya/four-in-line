@@ -1,4 +1,4 @@
-const board=document.querySelector(".board") 
+const board=document.getElementById("board") 
 let isFirstPlayer = true;
 const TOTAL_X =10;
 const TOTAL_Y =10;
