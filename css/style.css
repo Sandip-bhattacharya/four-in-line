@@ -1,0 +1,22 @@
+.board {  
+	display:flex; 
+	flex-wrap:wrap; 
+	height:560px; 
+	width:560px;
+	} 
+	.board div { 
+	height:50px; 
+	width:50px; 
+	margin:2px;
+	border-radius:30px; 
+	border:1px solid black; 
+	}
+	.square{ 
+	background:white; 
+	} 
+	.player-one { 
+	background:red;
+	}
+	.player-two { 
+	background:yellow;
+	}
