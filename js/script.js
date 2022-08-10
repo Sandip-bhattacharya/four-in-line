@@ -62,9 +62,7 @@ function clickBox(e){
 
 //check own function
 function checkWon(player, currentOffset){
-  stepsCombinations.map((item)=> {
-    item.countSteps = 0 
-  })
+  resetSteps();
   const offssetArray = currentOffset.split(',');
   const offSetX = Number(offssetArray[0]);
   const offSetY = Number(offssetArray[1]);
@@ -92,10 +90,10 @@ stepsCombinations.forEach((item) => {
   if(item.side == 'up' || item.side == 'down'){
     vertical = vertical + item.countSteps
   }
-  if(item.side == 'up-left' || item.side == 'down-left'){
+  if(item.side == 'up-left' || item.side == 'down-right'){
     diagonalLeft = diagonalLeft + item.countSteps
   }
-  if(item.side == 'up-right' || item.side == 'down-right'){
+  if(item.side == 'up-right' || item.side == 'down-left'){
     diagonalRight = diagonalRight + item.countSteps
   }
 })
@@ -133,6 +131,7 @@ function validate(player, offsetX, offsetY,side){
 
 //end the game and disable click
 function endGame(player = ''){
+  resetSteps();
   document.querySelectorAll(".board div").forEach(square=>{ 
     square.removeEventListener("click",clickBox)
     })
@@ -146,4 +145,11 @@ function isDraw(){
   return Array.from(document.querySelectorAll(".board div")).every(square=>
     square.classList.contains(FIRST_PLAYER_CLASS) 
     || square.classList.contains(SECOND_PLAYER_CLASS))
+}
+
+//reset steps
+function resetSteps(){
+  stepsCombinations.map((item)=> {
+    item.countSteps = 0 
+  })
 }
