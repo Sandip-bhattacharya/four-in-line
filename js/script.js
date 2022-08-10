@@ -5,14 +5,14 @@ const TOTAL_Y =10;
 const FIRST_PLAYER_CLASS = 'player-one';
 const SECOND_PLAYER_CLASS = 'player-two';
 const stepsCombinations=[
-  {side:'up', xStep:0 , yStep: -1},
-  {side:'down', xStep:0 , yStep: 1},
-  {side:'left', xStep: -1, yStep:0},
-  {side:'right', xStep: 1, yStep: 0},
-  {side:'up-left', xStep: -1, yStep: -1},
-  {side:'up-right', xStep: 1, yStep: -1},
-  {side:'down-left', xStep: -1, yStep: 1},
-  {side:'down-right', xStep: 1, yStep: 1}
+  {side:'up', xStep:0 , yStep: -1, countSteps:0},
+  {side:'down', xStep:0 , yStep: 1, countSteps:0},
+  {side:'left', xStep: -1, yStep:0, countSteps:0},
+  {side:'right', xStep: 1, yStep: 0, countSteps:0},
+  {side:'up-left', xStep: -1, yStep: -1, countSteps:0},
+  {side:'up-right', xStep: 1, yStep: -1, countSteps:0},
+  {side:'down-left', xStep: -1, yStep: 1, countSteps:0},
+  {side:'down-right', xStep: 1, yStep: 1, countSteps:0}
 ]
 document.addEventListener("DOMContentLoaded", loadDOM)
 
@@ -62,18 +62,52 @@ function clickBox(e){
 
 //check own function
 function checkWon(player, currentOffset){
+  stepsCombinations.map((item)=> {
+    item.countSteps = 0 
+  })
   const offssetArray = currentOffset.split(',');
   const offSetX = Number(offssetArray[0]);
   const offSetY = Number(offssetArray[1]);
-  const validateSides= ['up','down','left','right',
-  'up-left','up-right','down-left','down-right'];
   for(let i= 0; i< stepsCombinations.length; i++){
     if(validate(player,offSetX,offSetY,stepsCombinations[i])){
       return true;
     }
+    if(validateMiddlePoint(stepsCombinations)){
+      return true
+    }
   }
   return false;
 }
+
+function validateMiddlePoint(stepsCombinations){
+let horizontal = 0
+let vertical = 0
+let diagonalLeft = 0
+let diagonalRight = 0
+
+stepsCombinations.forEach((item) => {
+  if(item.side == 'left' || item.side == 'right'){
+    horizontal = horizontal + item.countSteps
+  }
+  if(item.side == 'up' || item.side == 'down'){
+    vertical = vertical + item.countSteps
+  }
+  if(item.side == 'up-left' || item.side == 'down-left'){
+    diagonalLeft = diagonalLeft + item.countSteps
+  }
+  if(item.side == 'up-right' || item.side == 'down-right'){
+    diagonalRight = diagonalRight + item.countSteps
+  }
+})
+  if(horizontal >=3 || 
+    vertical >=3 || 
+    diagonalLeft >= 3 ||
+     diagonalRight >=3){
+    return true
+  }
+return false
+}
+
 
 //validate function 
 function validate(player, offsetX, offsetY,side){
@@ -82,7 +116,6 @@ function validate(player, offsetX, offsetY,side){
   for(i=1; i<4; i++){
     x = x + (side.xStep)
     y = y + (side.yStep)
-
     /**validate if the offset is less minimum 
     **value 0 or grater than maximum value 10
     */
@@ -93,6 +126,7 @@ function validate(player, offsetX, offsetY,side){
     if(!document.querySelector("[data-offset='"+x+","+y+"']").classList.contains(player)){
        return false;
     }
+    side.countSteps = side.countSteps + 1
   }
   return true;
 }
